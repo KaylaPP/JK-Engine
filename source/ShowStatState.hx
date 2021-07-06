@@ -93,7 +93,7 @@ class ShowStatState extends MusicBeatState
         else
             promptStr = "\n";
 
-        statTxt.text = initStatTxt + promptStr;
+        statTxt.text = initStatTxt + promptStr + "\n";
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
 

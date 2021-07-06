@@ -1932,7 +1932,7 @@ class PlayState extends MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, gotHighScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
+			FlxG.switchState(new ShowStatState(sicks, cools, goods, bads, shits, misses, bombs, songScore, gotHighScore, getAccuracy(), SONG.song, CoolUtil.difficultyString(), generateRanking()));
 		}	
 	}
 

@@ -1529,7 +1529,7 @@ class PlayState extends MusicBeatState
 
 		hitTxt.text = "Sicks:  " + sicks + "\nCools:  " + cools + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses + "\nBombs:  " + bombs + "\n";
 		hitTxt.updateHitbox();
-		hitTxt.y = camHUD.height - (hitTxt.height * 7 / 8);
+		hitTxt.y = camHUD.height - hitTxt.height;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{

@@ -11,7 +11,6 @@ class DiscordClient
 	{
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			// 539 is what you get when you add the ASCII codes for JKENGINE into one number so I decided to make that the client ID
 			clientID: "861364948881375282", // change this to what ever the fuck you want lol
 			onReady: onReady,
 			onError: onError,

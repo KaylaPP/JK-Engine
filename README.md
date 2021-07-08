@@ -1,4 +1,8 @@
-This is a modification of Kade Engine 1.3 with an input system that closely follows that of other rhythm games like OpenITG.
+![JK Engine](JKEngineWitBackground.png)
+
+This mod changes the input system of FNF and adds some quality-of-life features that are largely absent from most mods.
+
+The input system aims to reflect that of other input systems like in games such as OpenITG and Stepmania.
 
 **HUGE NOTICE**
 
@@ -9,15 +13,18 @@ This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION
 - [ninjamuffin99](https://twitter.com/ninja_muffin99) - Programmer
 - [PhantomArcade3K](https://twitter.com/phantomarcade3k) and [Evilsk8r](https://twitter.com/evilsk8r) - Art
 - [Kawaisprite](https://twitter.com/kawaisprite) - Musician
-- [Kade M](https://github.com/KadeDev) - Creator of the Kade Engine
+- [Kade M](https://github.com/KadeDev) - Creator of the Kade Engine, what JK Engine is based on
 - [Jaymes "Jay" Hayward](https://www.youtube.com/c/JAiZYouTube/videos) - Charter
 - [kEvin](https://kevinp.carrd.co) - Main Programmer for this Mod
 - [Toumi](https://soundcloud.com/toumitunes) - Creator of the boom sound effect (also a really cool guy)
 - [Steve](https://arciwithnoh.newgrounds.com/) - Artist/Animator/Playtester
 - [ClockShaft](https://clockshaft.newgrounds.com/) - Arist/Animator
 - [0th](https://reddit.com/u/mest0shai) - Artist/Animator/Playtester
-- Fia - Artist/Animator
-- [ChazbillYT](https://www.youtube.com/channel/UC8SJ69agmZMWOQfLpxD7omQ) - Artist
+- [Fia](https://twitter.com/fia_dot_exe) - Artist/Animator
+- [Werdsk](https://twitter.com/Werducc) - Artist/Animator
+- [ChazbillYT](https://www.youtube.com/channel/UCnAj1s3VZ3EbJRvMm5lRg_A) - Artist
+- [Gema Police](https://twitter.com/gemapolice?lang=en) - Artist
+- [Davie Paige](https://www.instagram.com/daviepaige/) - The guy I collaborated with to make "From Nothing"
 - Spook - Playtester
 - Dreaming - Playtester
 

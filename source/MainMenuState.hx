@@ -36,7 +36,7 @@ class MainMenuState extends MusicBeatState
 	var newGaming2:FlxText;
 	var newInput:Bool = true;
 
-	public static var gameVer:String = "JK Engine v0.7";
+	public static var gameVer:String = "JK Engine v0.7.1";
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;

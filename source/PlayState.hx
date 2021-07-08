@@ -1251,9 +1251,11 @@ class PlayState extends MusicBeatState
 				var susLength:Float = swagNote.sustainLength;
 
 				susLength = susLength / Conductor.stepCrochet;
+				if(susLength <= 0.5 && susLength > 0.0)
+					susLength = 1.0;
 				unspawnNotes.push(swagNote);
 
-				for (susNote in 0...Math.floor(susLength))
+				for (susNote in 0...Math.round(susLength))
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
@@ -1474,7 +1476,7 @@ class PlayState extends MusicBeatState
 
 	private var paused:Bool = false;
 	var startedCountdown:Bool = false;
-	var canPause:Bool = true;
+	var canPause:Bool = false;
 
 	function truncateFloat( number : Float, precision : Int): Float 
 	{
@@ -1596,7 +1598,10 @@ class PlayState extends MusicBeatState
 			{
 				Conductor.songPosition += FlxG.elapsed * 1000;
 				if (Conductor.songPosition >= 0)
+				{
+					canPause = true;
 					startSong();
+				}
 			}
 		}
 		else

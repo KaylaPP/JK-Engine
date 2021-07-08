@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -22,6 +23,22 @@ class PauseSubState extends MusicBeatSubstate
 
 	var pauseMusic:FlxSound;
 
+	var bg:FlxSprite;
+	var levelInfo:FlxText;
+	var levelDifficulty:FlxText;
+
+	var resuming:Bool = false;
+	var resumingTimer:Float = 2.0;
+
+	var ready:FlxSprite;
+	var set:FlxSprite;
+	var go:FlxSprite;
+
+	var canPlayThree:Bool = true;
+	var canPlayTwo:Bool = true;
+	var canPlayOne:Bool = true;
+	var canPlayGo:Bool = true;
+
 	public function new(x:Float, y:Float)
 	{
 		super();
@@ -32,19 +49,19 @@ class PauseSubState extends MusicBeatSubstate
 
 		FlxG.sound.list.add(pauseMusic);
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
 
-		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
+		levelInfo = new FlxText(20, 15, 0, "", 32);
 		levelInfo.text += PlayState.SONG.song;
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
 		add(levelInfo);
 
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, "", 32);
+		levelDifficulty = new FlxText(20, 15 + 32, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyString();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
@@ -75,6 +92,22 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		ready = new FlxSprite(0, 0, Paths.image("ready"));
+		set = new FlxSprite(0, 0, Paths.image("set"));
+		go = new FlxSprite(0, 0, Paths.image("go"));
+
+		ready.visible = false;
+		set.visible = false;
+		go.visible = false;
+
+		ready.screenCenter();
+		set.screenCenter();
+		go.screenCenter();
+
+		add(ready);
+		add(set);
+		add(go);
 	}
 
 	override function update(elapsed:Float)
@@ -84,38 +117,112 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
-
-		if (upP)
+		if(resuming)
 		{
-			changeSelection(-1);
-		}
-		if (downP)
-		{
-			changeSelection(1);
-		}
-
-		if (accepted)
-		{
-			var daSelected:String = menuItems[curSelected];
-
-			switch (daSelected)
+			if(resumingTimer <= 0)
+				close();
+			switch(Math.ceil(resumingTimer * 2))
 			{
-				case "Resume":
-					close();
-				case "Restart Song":
-					FlxG.resetState();
-				case "Exit to menu":
-					FlxG.switchState(new MainMenuState());
-			}
-		}
+				case 4:
+					if(canPlayThree)
+					{
+						FlxG.sound.play(Paths.sound('intro3'), 0.6);
+						canPlayThree = false;
+					}
+				case 3:
+					if(canPlayTwo)
+					{
+						FlxG.sound.play(Paths.sound('intro2'), 0.6);
+						canPlayTwo = false;
+					}
+					ready.visible = true;
+					set.visible = false;
+					go.visible = false;
 
-		if (FlxG.keys.justPressed.J)
+					FlxTween.tween(ready, {y: ready.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeInOut,
+						onComplete: function(twn:FlxTween)
+						{
+							ready.destroy();
+						}
+					});
+				case 2:
+					if(canPlayOne)
+					{
+						FlxG.sound.play(Paths.sound('intro1'), 0.6);
+						canPlayOne = false;
+					}
+					ready.visible = false;
+					set.visible = true;
+					go.visible = false;
+
+					FlxTween.tween(set, {y: set.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeInOut,
+						onComplete: function(twn:FlxTween)
+						{
+							set.destroy();
+						}
+					});
+				case 1:
+					if(canPlayGo)
+					{
+						FlxG.sound.play(Paths.sound('introGo'), 0.6);
+						canPlayGo = false;
+					}
+					ready.visible = false;
+					set.visible = false;
+					go.visible = true;
+
+					FlxTween.tween(go, {y: go.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+						ease: FlxEase.cubeInOut,
+						onComplete: function(twn:FlxTween)
+						{
+							go.destroy();
+						}
+					});
+			}
+			resumingTimer -= elapsed;
+		}
+		else
 		{
-			// for reference later!
-			// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
+			var upP = controls.UP_P;
+			var downP = controls.DOWN_P;
+			var accepted = controls.ACCEPT;
+
+			if (upP)
+			{
+				changeSelection(-1);
+			}
+			if (downP)
+			{
+				changeSelection(1);
+			}
+
+			if (accepted)
+			{
+				var daSelected:String = menuItems[curSelected];
+
+				switch (daSelected)
+				{
+					case "Resume":
+						resuming = true;
+
+						remove(grpMenuShit);
+						remove(levelDifficulty);
+						remove(levelInfo);
+						remove(bg);
+					case "Restart Song":
+						FlxG.resetState();
+					case "Exit to menu":
+						FlxG.switchState(new MainMenuState());
+				}
+			}
+
+			if (FlxG.keys.justPressed.J)
+			{
+				// for reference later!
+				// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
+			}
 		}
 	}
 

@@ -1856,6 +1856,8 @@ class PlayState extends MusicBeatState
 
 		if (!inCutscene)
 		{
+			if(controls.RESET)
+				health = -1;
 			keyShit(elapsed);
 		}
 

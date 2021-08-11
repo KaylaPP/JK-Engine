@@ -1,7 +1,10 @@
 package;
 
+import flixel.effects.postprocess.PostProcess;
+import sys.io.File;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxAssets;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
@@ -154,7 +157,9 @@ class Note extends FlxSprite
 			}
 			animation.play('bomb');
 		}
-		// trace(prevNote);
+		#if debug
+		//trace(prevNote);
+		#end
 
 		if (FlxG.save.data.downscroll && isSustainNote)
 			flipY = true;
@@ -163,7 +168,7 @@ class Note extends FlxSprite
 		{
 			posOrNeg = prevNote.posOrNeg;
 			noteScore * 0.2;
-			alpha = 0.6;
+			alpha = 1.0;
 
 			x += width / 2;
 
@@ -238,8 +243,8 @@ class Note extends FlxSprite
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * (0.5))
 				&& noteType == 0 && isSustainNote && getRootNote().wasGoodHit)
 				canBeHit = true;
-			else if(noteDiff < Conductor.safeZoneOffset * 0.25
-				&& noteDiff > Conductor.safeZoneOffset * -0.25 && noteType == 1)
+			else if(noteDiff < 25.0
+				&& noteDiff > -25.0 && noteType == 1)
 				canBeHit = true;
 			else
 				canBeHit = false;
@@ -252,7 +257,11 @@ class Note extends FlxSprite
 
 			if(isSustainNote && getRootNote().wasGoodHit)
 			{
-				alpha = 0.6 - 0.5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool());
+				//color = 0.1 + 0.9 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool());
+				color = 0xFFFFFF -
+					0x10000 * Std.int(0xE5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool())) -
+					0x100 * Std.int(0xE5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool())) -
+					Std.int(0xE5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool()));
 			}
 
 			if(canBeHit)
@@ -281,7 +290,7 @@ class Note extends FlxSprite
 				case 1:
 					rating = "boom";
 				}
-				FlxG.watch.addQuick("Note" + this.ID, rating);
+				//FlxG.watch.addQuick("Note" + this.ID, rating);
 			}
 
 			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 1.0) && !wasGoodHit)
@@ -303,8 +312,8 @@ class Note extends FlxSprite
 
 		if (tooLate)
 		{
-			if (alpha > 0.1)
-				alpha = 0.1;
+			if (color != 0x1A1A1A)
+				color = 0x1A1A1A;
 		}
 
 		if(!hasChecked)
@@ -314,18 +323,6 @@ class Note extends FlxSprite
 		}
 		else
 		{
-			if(PlayState.noteSillyTime)
-			{
-				coefficient += elapsed;
-				if(coefficient > 1)
-					coefficient = 1;
-			}
-			else
-			{
-				coefficient -= elapsed;
-				if(coefficient < 0)
-					coefficient = 0;
-			}
 			if(coefficient > 0)
 				x = originalX + coefficient * swagWidth * posOrNeg * Math.sin(Math.PI * 2.0 * (y - (downscroll ? 555 : 50)) / 720.0) * (0.4);
 			if(PlayState.noteGoInsane)

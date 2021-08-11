@@ -1,5 +1,6 @@
 package;
 
+import flixel.input.keyboard.FlxKey;
 import Controls.KeyboardScheme;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -36,7 +37,8 @@ class MainMenuState extends MusicBeatState
 	var newGaming2:FlxText;
 	var newInput:Bool = true;
 
-	public static var gameVer:String = "JK Engine v0.7.1";
+	public static var displayGameVer:String;
+	public static var gameVer:String = "JK Engine v0.9";
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -46,6 +48,12 @@ class MainMenuState extends MusicBeatState
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
+		#end
+
+		displayGameVer = gameVer;
+
+		#if debug 
+		displayGameVer += " DEBUG";
 		#end
 
 		if (!FlxG.sound.music.playing)
@@ -107,11 +115,16 @@ class MainMenuState extends MusicBeatState
 
 		// NG.core.calls.event.logEvent('swag').send();
 
+		controls.setKeyboardScheme(Controls.KeyboardScheme.None, true);
 
-		if (FlxG.save.data.dfjk)
-			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-		else
-			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
+		// Custom Keybinds
+		controls.bindKeys(UP, [FlxG.save.data.KEY_UP, FlxKey.UP]);
+		controls.bindKeys(LEFT, [FlxG.save.data.KEY_LEFT, FlxKey.LEFT]);
+		controls.bindKeys(DOWN, [FlxG.save.data.KEY_DOWN, FlxKey.DOWN]);
+		controls.bindKeys(RIGHT, [FlxG.save.data.KEY_RIGHT, FlxKey.RIGHT]);
+		controls.bindKeys(ACCEPT, [FlxG.save.data.KEY_ACCEPT]);
+		controls.bindKeys(BACK, [FlxG.save.data.KEY_BACK]);
+		controls.bindKeys(RESET, [FlxG.save.data.KEY_RESET]);
 
 		changeItem();
 

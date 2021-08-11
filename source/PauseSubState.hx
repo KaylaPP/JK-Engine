@@ -119,7 +119,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		if(resuming)
 		{
-			if(resumingTimer <= 0)
+			if(resumingTimer <= 0 || controls.ACCEPT)
 				close();
 			switch(Math.ceil(resumingTimer * 2))
 			{

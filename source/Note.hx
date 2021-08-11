@@ -52,6 +52,10 @@ class Note extends FlxSprite
 	public var downscroll:Bool = FlxG.save.data.downscroll;
 	public var isFinalSustain:Bool = false;
 
+	// for pixel bomb
+	public var exploding:Bool = false;
+	public var boomElapsed:Float = 0.0;
+
 	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
 		super();
@@ -75,26 +79,42 @@ class Note extends FlxSprite
 		switch (daStage)
 		{
 			case 'school' | 'schoolEvil':
-				loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
-
-				animation.add('greenScroll', [6]);
-				animation.add('redScroll', [7]);
-				animation.add('blueScroll', [5]);
-				animation.add('purpleScroll', [4]);
-
-				if (isSustainNote)
+				if(noteType != 1)
 				{
-					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
+					loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
 
-					animation.add('purpleholdend', [4]);
-					animation.add('greenholdend', [6]);
-					animation.add('redholdend', [7]);
-					animation.add('blueholdend', [5]);
+					animation.add('greenScroll', [6]);
+					animation.add('redScroll', [7]);
+					animation.add('blueScroll', [5]);
+					animation.add('purpleScroll', [4]);
 
-					animation.add('purplehold', [0]);
-					animation.add('greenhold', [2]);
-					animation.add('redhold', [3]);
-					animation.add('bluehold', [1]);
+					if (isSustainNote)
+					{
+						loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
+
+						animation.add('purpleholdend', [4]);
+						animation.add('greenholdend', [6]);
+						animation.add('redholdend', [7]);
+						animation.add('blueholdend', [5]);
+
+						animation.add('purplehold', [0]);
+						animation.add('greenhold', [2]);
+						animation.add('redhold', [3]);
+						animation.add('bluehold', [1]);
+					}
+				}
+				else 
+				{
+					frames = Paths.getSparrowAtlas('weeb/pixelUI/pixel-boom', 'week6');
+
+					animation.addByPrefix('bomb', 'bomb');
+					animation.addByPrefix('explosion', 'explosion', 12);
+
+					animation.play('bomb');
+
+					updateHitbox();
+					setGraphicSize(17);
+					updateHitbox();
 				}
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
@@ -225,6 +245,12 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if(exploding)
+		{
+			boomElapsed += elapsed;
+			return;
+		}
 
 		if(Math.floor(sustainLength) > 0) 
 			startsSustain = true;

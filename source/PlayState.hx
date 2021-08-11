@@ -1762,7 +1762,19 @@ class PlayState extends MusicBeatState
 		if (generatedMusic)
 			{
 				notes.forEachAlive(function(daNote:Note)
-				{	
+				{
+					if(daNote.boomElapsed > 0.5)
+					{
+						daNote.kill();
+						notes.remove(daNote, true);
+						daNote.destroy();
+						return;
+					}
+					if(daNote.exploding)
+					{
+						daNote.y = strumLine.y;
+						return;
+					}
 					if (daNote.y > FlxG.height)
 					{
 						daNote.active = false;
@@ -2149,7 +2161,8 @@ class PlayState extends MusicBeatState
 			currentTimingShown.velocity.x += comboSpr.velocity.x;
 			#end
 
-			add(rating);
+			if(!daNote.exploding)
+				add(rating);
 	
 			if (!curStage.startsWith('school'))
 			{
@@ -2214,7 +2227,7 @@ class PlayState extends MusicBeatState
 				numScore.velocity.y -= FlxG.random.int(140, 160);
 				numScore.velocity.x = FlxG.random.float(-5, 5);
 	
-				if (combo >= 10 || combo == 0)
+				if((combo >= 10 || combo == 0) && !daNote.exploding)
 					add(numScore);
 	
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
@@ -2615,6 +2628,12 @@ class PlayState extends MusicBeatState
 
 		if (!note.wasGoodHit)
 		{
+			if((curStage == 'school' || curStage == 'schoolEvil') && !note.exploding && note.noteType == 1)
+			{
+				note.exploding = true;
+				note.animation.play('explosion');
+				note.canBeHit = false;
+			}
 			if (!note.isSustainNote)
 			{
 				popUpScore(note);
@@ -2644,9 +2663,12 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			note.kill();
-			notes.remove(note, true);
-			note.destroy();
+			if(!(curStage == 'school' || curStage == 'schoolEvil') || note.noteType != 1)
+			{
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
 		}
 	}
 		

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="NOTE_assets.png">
+	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="bomb0000" x="0" y="0" width="19" height="19"/>
+    <SubTexture name="explosion0000" x="19" y="0" width="19" height="19"/>
+    <SubTexture name="explosion0001" x="38" y="0" width="19" height="19"/>
+    <SubTexture name="explosion0002" x="0" y="19" width="19" height="19"/>
+    <SubTexture name="explosion0003" x="19" y="19" width="19" height="19"/>
+    <SubTexture name="explosion0004" x="38" y="19" width="19" height="19"/>
+    <SubTexture name="explosion0005" x="0" y="38" width="19" height="19"/>
+</TextureAtlas>

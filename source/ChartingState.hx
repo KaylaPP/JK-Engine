@@ -187,7 +187,9 @@ class ChartingState extends MusicBeatState
 		check_voices.callback = function()
 		{
 			_song.needsVoices = check_voices.checked;
-			trace('CHECKED!');
+			#if debug
+trace('CHECKED!');
+#end
 		};
 
 		var check_mute_inst = new FlxUICheckBox(10, 200, null, null, "Mute Instrumental (in editor)", 100);
@@ -535,6 +537,11 @@ class ChartingState extends MusicBeatState
 
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 
+		curRenderedNotes.forEachAlive(function (daNote:Note) 
+		{
+			daNote.alpha = 1.0;
+		});
+
 		if ((upP || rightP || downP || leftP) && writingNotes)
 		{
 			for(i in 0...controlArray.length)
@@ -548,11 +555,15 @@ class ChartingState extends MusicBeatState
 								continue;
 							if (note[0] == Conductor.songPosition && note[1] % 4 == i)
 							{
+								#if debug
 								trace('GAMING');
+								#end
 								_song.notes[curSection].sectionNotes.remove(note);
 							}
 						}
+					#if debug
 					trace('adding note');
+					#end
 					var noteType:Int = addMines.checked ? 1 : 0;
 					_song.notes[curSection].sectionNotes.push([Conductor.songPosition, i, 0, noteType]);
 					updateGrid();
@@ -565,9 +576,15 @@ class ChartingState extends MusicBeatState
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
 		{
+			#if debug
 			trace(curStep);
+			#end
+			#if debug
 			trace((_song.notes[curSection].lengthInSteps) * (curSection + 1));
+			#end
+			#if debug
 			trace('DUMBSHIT');
+			#end
 
 			if (_song.notes[curSection + 1] == null)
 			{
@@ -594,8 +611,10 @@ class ChartingState extends MusicBeatState
 						}
 						else
 						{
+							#if debug
 							trace('tryin to delete note');
 							trace(note.noteData);
+							#end
 							deleteNote(note);
 						}
 					}
@@ -820,11 +839,15 @@ class ChartingState extends MusicBeatState
 
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void
 	{
-		trace('changing section' + sec);
+		#if debug
+trace('changing section' + sec);
+#end
 
 		if (_song.notes[sec] != null)
 		{
-			trace('naw im not null');
+			#if debug
+trace('naw im not null');
+#end
 			curSection = sec;
 
 			updateGrid();
@@ -851,7 +874,11 @@ class ChartingState extends MusicBeatState
 			updateSectionUI();
 		}
 		else
+		{
+			#if debug
 			trace('bro wtf I AM NULL');
+			#end
+		}
 	}
 
 	function copySection(?sectionNum:Int = 1)
@@ -946,7 +973,9 @@ class ChartingState extends MusicBeatState
 				{
 					if (_song.notes[sec].sectionNotes[notesse][2] == null)
 					{
-						trace('SUS NULL');
+						#if debug
+trace('SUS NULL');
+#end
 						_song.notes[sec].sectionNotes[notesse][2] = 0;
 					}
 				}
@@ -961,6 +990,7 @@ class ChartingState extends MusicBeatState
 			var noteType = i[3];
 
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4, noteType);
+			note.alwaysFullAlpha = true;
 			note.sustainLength = daSus;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
@@ -1013,19 +1043,24 @@ class ChartingState extends MusicBeatState
 
 	function deleteNote(note:Note):Void
 	{
+		#if debug
 		trace(_song.notes[curSection].sectionNotes);
+		#end
 		for (n in 0..._song.notes[curSection].sectionNotes.length)
 		{
 			var i = _song.notes[curSection].sectionNotes[n];
 			if (i == null)
 				continue;
-			if ((i[0] == note.strumTime + (note.strumTime == 0 ? 0 : 1) 
-				? true : i[0] == note.strumTime) 
-				&& i[1] % 4 == note.noteData)
-				// Why does it do this?
-				// I DONT FUCKING KNOW!!!!!!!!!!!!!!
+
+			var noteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
+
+			if ((i[0] == note.strumTime + (note.strumTime == 0 ? 0 : 1) ? true : i[0] == note.strumTime) 
+				&& i[1] == noteData)
 			{
+				#if debug
 				trace('GAMING');
+				#end
+				trace(i);
 				_song.notes[curSection].sectionNotes.remove(i);
 			}
 		}
@@ -1066,8 +1101,10 @@ class ChartingState extends MusicBeatState
 			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteType]);
 		}
 
+		#if debug
 		trace(noteStrum);
 		trace(curSection);
+		#end
 
 		updateGrid();
 		updateNoteUI();
@@ -1097,7 +1134,9 @@ class ChartingState extends MusicBeatState
 				daLength += swagLength;
 				if (sec != null && sec == i)
 				{
-					trace('swag loop??');
+					#if debug
+trace('swag loop??');
+#end
 					break;
 				}
 			}
@@ -1107,7 +1146,9 @@ class ChartingState extends MusicBeatState
 
 	function loadLevel():Void
 	{
-		trace(_song.notes);
+		#if debug
+trace(_song.notes);
+#end
 	}
 
 	function getNotes():Array<Dynamic>

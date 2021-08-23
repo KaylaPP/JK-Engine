@@ -56,6 +56,8 @@ class Note extends FlxSprite
 	public var exploding:Bool = false;
 	public var boomElapsed:Float = 0.0;
 
+	public var alwaysFullAlpha:Bool = false;
+
 	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
 		super();
@@ -332,7 +334,7 @@ class Note extends FlxSprite
 			if (strumTime <= Conductor.songPosition && noteType == 0)
 				wasGoodHit = true;
 
-			if(FlxG.save.data.centerArrows || !FlxG.save.data.showLeftArrows)
+			if((FlxG.save.data.centerArrows || !FlxG.save.data.showLeftArrows) && !alwaysFullAlpha)
 				alpha = 0;
 		}
 

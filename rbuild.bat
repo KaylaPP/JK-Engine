@@ -1,3 +1,3 @@
 @echo off
 
-lime build windows -release
+lime test windows -release

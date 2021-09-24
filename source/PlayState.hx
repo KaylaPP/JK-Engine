@@ -2043,9 +2043,9 @@ class PlayState extends MusicBeatState
 		
 		return accuracy < 100.0 ? accuracy : 100.0;
 		*/
-		if(sicks + cools + goods + bads + shits + bombs == 0)
+		if(sicks + cools + goods + bads + craps + shits + bombs + misses == 0)
 			return 0.0;
-		var accuracy:Float = 100.0 * songScore / (350.0 * (sicks + cools + goods + bads + shits + bombs));
+		var accuracy:Float = 100.0 * songScore / (350.0 * (sicks + cools + goods + bads + craps + shits + bombs));
 		if(accuracy > 100)
 			accuracy = 100;
 		return accuracy;

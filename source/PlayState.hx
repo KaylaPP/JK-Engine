@@ -1505,7 +1505,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.accuracyDisplay)
 		{
-			scoreTxt.text = "Score:" + ("" + songScore) + " | Accuracy:" + truncateFloat(getAccuracy(), 2) + "% | " + generateRanking();
+			scoreTxt.text = "Score:" + ("" + songScore) + " | Accuracy:" + ((getAccuracy() < 0) ? ("-") : ("")) + truncateFloat(Math.abs(getAccuracy()), 2) + "% | " + generateRanking();
 		}
 		else
 		{
@@ -2028,7 +2028,7 @@ class PlayState extends MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new ShowStatState(sicks, cools, goods, bads, shits, misses, bombs, songScore, gotHighScore, getAccuracy(), SONG.song, CoolUtil.difficultyString(), generateRanking()));
+			FlxG.switchState(new ShowStatState(sicks, cools, goods, bads, craps, shits, misses, bombs, songScore, gotHighScore, getAccuracy(), SONG.song, CoolUtil.difficultyString(), generateRanking()));
 		}	
 	}
 
@@ -2043,9 +2043,10 @@ class PlayState extends MusicBeatState
 		
 		return accuracy < 100.0 ? accuracy : 100.0;
 		*/
-		if(sicks + cools + goods + bads + craps + shits + bombs + misses == 0)
-			return 0.0;
-		var accuracy:Float = 100.0 * songScore / (350.0 * (sicks + cools + goods + bads + craps + shits + bombs));
+		if(songScore == 0 || sicks + cools + goods + bads + craps + shits + bombs + misses == 0)
+			return 0;
+		var accuracy:Float = 100.0 * Math.abs(songScore) / (350.0 * (sicks + cools + goods + bads + craps + shits + bombs + misses));
+		accuracy *= ((songScore < 0) ? (-1.0) : (1.0));
 		if(accuracy > 100)
 			accuracy = 100;
 		return accuracy;

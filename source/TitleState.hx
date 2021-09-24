@@ -40,6 +40,7 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var jkEngineGroup:Array<FlxSprite>;
 	var jkEngineIndex:Int;
+	var jkEngineAlphas:Array<Float>;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 
@@ -346,12 +347,12 @@ class TitleState extends MusicBeatState
 		{
 			for(jks in jkEngineGroup)
 			{
-				jks.visible = false;
+				jks.alpha = 0;
 			}
 			jkEngineIndex++;
 			if(jkEngineIndex >= 4)
 				jkEngineIndex = 0;
-			jkEngineGroup[jkEngineIndex].visible = true;
+			jkEngineGroup[jkEngineIndex].alpha = jkEngineAlphas[jkEngineIndex];
 		}
 		switch (curBeat)
 		{
@@ -413,12 +414,23 @@ class TitleState extends MusicBeatState
 			remove(ngSpr);
 
 			jkEngineGroup = new Array<FlxSprite>();
+			jkEngineAlphas = new Array<Float>();
 			jkEngineIndex = 0;
 			for(i in 1...5)
 			{
 				var jkfile:String = "jkengine" + i;
-				var newsprite:FlxSprite = new FlxSprite(44, 410).loadGraphic(Paths.image(jkfile));
-				newsprite.visible = false;
+				var newsprite:FlxSprite = new FlxSprite(44, 410);
+				if(newsprite.loadGraphic(Paths.image(jkfile)).pixels == new FlxSprite().loadGraphic("").pixels)
+				{
+					trace('jay sex');
+					jkEngineAlphas.push(0);
+				}
+				else
+				{
+					newsprite.loadGraphic(Paths.image(jkfile));
+					jkEngineAlphas.push(1);
+				}
+				newsprite.alpha = 0;
 				add(newsprite);
 				jkEngineGroup.push(newsprite);
 			}

@@ -168,8 +168,10 @@ class Note extends FlxSprite
 				switch(noteType)
 				{
 				case '1', '2', '4':
-					if(noteDiff > 105)
+					if(noteDiff > 150)
 						rating = "shit";
+					else if(noteDiff > 120)
+						rating = "crap"
 					else if(noteDiff > 80)
 						rating = "bad";
 					else if(noteDiff > 55)
@@ -183,7 +185,6 @@ class Note extends FlxSprite
 				case 'M':
 					rating = "boom";
 				}
-				//FlxG.watch.addQuick("Note" + this.ID, rating);
 			}
 
 			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 1.0) && !wasGoodHit && noteType != '0')

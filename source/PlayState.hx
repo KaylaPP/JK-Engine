@@ -1512,7 +1512,14 @@ class PlayState extends MusicBeatState
 			scoreTxt.text = "Score:" + songScore;
 		}
 
-		hitTxt.text = "Sicks:  " + sicks + "\nCools:  " + cools + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses + "\nBombs:  " + bombs + "\n";
+		hitTxt.text =   "Sicks:  " + sicks + 
+		              "\nCools:  " + cools + 
+					  "\nGoods:  " + goods + 
+					  "\nBads:   " + bads + 
+					  "\nCraps:  " + craps +
+					  "\nShits:  " + shits + 
+					  "\nMisses: " + misses + 
+					  "\nBombs:  " + bombs + "\n";
 		hitTxt.updateHitbox();
 		hitTxt.y = camHUD.height - hitTxt.height;
 
@@ -2128,6 +2135,12 @@ class PlayState extends MusicBeatState
 					addHealth -= maxHealth * 0.075;
 					if(daNote.noteType != '3')
 						shits++;
+				case 'crap':
+					combo = 0;
+					score = -150;
+					addHealth -= maxHealth * 0.035;
+					if(daNote.noteType != '3')
+						craps++;
 				case 'bad':
 					daRating = 'bad';
 					score = -100;

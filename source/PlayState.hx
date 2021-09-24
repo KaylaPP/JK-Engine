@@ -2053,9 +2053,11 @@ class PlayState extends MusicBeatState
 
 	function generateRanking():String
 	{
-		var rank:String = "Yikes";
+		var rank:String = "What the actual fuck";
 		var currentAccuracy = getAccuracy();
 		
+		if(currentAccuracy >= 0)
+			rank = "Yikes";
 		if(currentAccuracy >= 50)
 			rank = "F";
 		if(currentAccuracy >= 55)

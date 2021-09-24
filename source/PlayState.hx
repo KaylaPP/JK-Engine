@@ -2891,6 +2891,8 @@ class PlayState extends MusicBeatState
 			{
 				susMisses[i] = false;
 
+				combo = 0;
+
 				// change health deduction later?
 				health -= maxHealth * 0.05;
 				if (combo > 5 && gf.animOffsets.exists('sad'))

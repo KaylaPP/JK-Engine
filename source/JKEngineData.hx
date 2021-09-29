@@ -43,5 +43,8 @@ class JKEngineData
 
 		if (FlxG.save.data.KEY_RESET == null)
 			FlxG.save.data.KEY_RESET = FlxKey.R;
+
+		if (FlxG.save.data.NOTE_THEME == null)
+			FlxG.save.data.NOTE_THEME = "vanilla";
 	}
 }

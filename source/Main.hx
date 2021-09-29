@@ -63,6 +63,7 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
+		initialState = DebugState;
 		#if !debug
 		initialState = TitleState;
 		#end

@@ -86,9 +86,6 @@ class Note extends FlxSprite
 
 		if(noteType == '2')
 		{
-			#if debug
-			trace('generating sustains');
-			#end
 			this.rootNote = this;
 			this.sustainPiece = new Note(strumTime, 0, noteData, false, '0', this.rootNote);
 			this.sustainEnd = new Note(strumTime + sustainLength, 0, noteData, false, '3', this.rootNote, this.sustainPiece);
@@ -96,28 +93,16 @@ class Note extends FlxSprite
 		}
 		if(noteType == '0')
 		{
-			#if debug
-			trace('sustain piece');
-			#end
 			this.rootNote = rootNote;
 			this.sustainPiece = this;
 		}
 		if(noteType == '3')
 		{
-			#if debug
-			trace('sustain end');
-			#end
 			this.rootNote = rootNote;
 			this.sustainPiece = sustainPiece;
 			this.sustainPiece.sustainEnd = this;
 			this.sustainEnd = this;
 		}
-
-		#if debug
-		trace(rootNote == null);
-		trace(sustainPiece == null);
-		trace(sustainEnd == null);
-		#end
 
 		//var daStage:String = PlayState.curStage;
 	}

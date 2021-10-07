@@ -209,41 +209,22 @@ class Note extends FlxSprite
 
 	public function generateSprite():Void
 	{
-		frames = Paths.getSparrowAtlas('NOTE_assets', 'shared');
-
-		animation.addByPrefix('bomb', 'bomb');
-
-		animation.addByPrefix('greenScroll', 'green0');
-		animation.addByPrefix('redScroll', 'red0');
-		animation.addByPrefix('blueScroll', 'blue0');
-		animation.addByPrefix('purpleScroll', 'purple0');
-
-		animation.addByPrefix('purpleholdend', 'pruple end hold');
-		animation.addByPrefix('greenholdend', 'green hold end');
-		animation.addByPrefix('redholdend', 'red hold end');
-		animation.addByPrefix('blueholdend', 'blue hold end');
-
-		animation.addByPrefix('purplehold', 'purple hold piece');
-		animation.addByPrefix('greenhold', 'green hold piece');
-		animation.addByPrefix('redhold', 'red hold piece');
-		animation.addByPrefix('bluehold', 'blue hold piece');
-
 		if(noteType == 'M')
 		{
-			animation.play('bomb');
+			loadGraphic(Paths.themeimage('mine', 'notes'));
 		}
 		if(noteType == '1' || noteType == '2' || noteType == '4')
 		{
 			switch(noteData)
 			{
 				case 0:
-					animation.play('purpleScroll');
+					loadGraphic(Paths.themeimage('tap_left', 'notes'));
 				case 1:
-					animation.play('blueScroll');
+					loadGraphic(Paths.themeimage('tap_down', 'notes'));
 				case 2:
-					animation.play('greenScroll');
+					loadGraphic(Paths.themeimage('tap_up', 'notes'));
 				case 3:
-					animation.play('redScroll');
+					loadGraphic(Paths.themeimage('tap_right', 'notes'));
 			}
 		}
 		if(noteType == '0')
@@ -251,13 +232,13 @@ class Note extends FlxSprite
 			switch(noteData)
 			{
 				case 0:
-					animation.play('purplehold');
+					loadGraphic(Paths.themeimage('suspiece_left', 'notes'));
 				case 1:
-					animation.play('bluehold');
+					loadGraphic(Paths.themeimage('suspiece_down', 'notes'));
 				case 2:
-					animation.play('greenhold');
+					loadGraphic(Paths.themeimage('suspiece_up', 'notes'));
 				case 3:
-					animation.play('redhold');
+					loadGraphic(Paths.themeimage('suspiece_right', 'notes'));
 			}
 		}
 		if(noteType == '3')
@@ -265,13 +246,13 @@ class Note extends FlxSprite
 			switch(noteData)
 			{
 				case 0:
-					animation.play('purpleholdend');
+					loadGraphic(Paths.themeimage('susend_left', 'notes'));
 				case 1:
-					animation.play('blueholdend');
+					loadGraphic(Paths.themeimage('susend_down', 'notes'));
 				case 2:
-					animation.play('greenholdend');
+					loadGraphic(Paths.themeimage('susend_up', 'notes'));
 				case 3:
-					animation.play('redholdend');
+					loadGraphic(Paths.themeimage('susend_right', 'notes'));
 			}
 		}
 

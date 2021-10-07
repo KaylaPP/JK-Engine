@@ -93,9 +93,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
-		ready = new FlxSprite(0, 0, Paths.image("ready"));
-		set = new FlxSprite(0, 0, Paths.image("set"));
-		go = new FlxSprite(0, 0, Paths.image("go"));
+		ready = new FlxSprite(0, 0, Paths.themeimage("ready", 'misc'));
+		set = new FlxSprite(0, 0, Paths.themeimage("set", 'misc'));
+		go = new FlxSprite(0, 0, Paths.themeimage("go", 'misc'));
 
 		ready.visible = false;
 		set.visible = false;

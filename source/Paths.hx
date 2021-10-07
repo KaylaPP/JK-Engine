@@ -7,6 +7,8 @@ import openfl.utils.Assets as OpenFlAssets;
 
 class Paths
 {
+	private var themePaths:Array<String> = [ 'judgements', 'misc', 'notes', 'receptors' ];
+
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	static var currentLevel:String;
@@ -103,6 +105,59 @@ class Paths
 	inline static public function font(key:String)
 	{
 		return 'assets/fonts/$key';
+	}
+
+	inline static public function themeimage(key:String, imgtype:String, theme:String = "")
+	{
+		if(theme == "")
+			theme = FlxG.save.data.NOTE_THEME;
+
+		if(!OpenFlAssets.exists('themes:assets/themes/$theme/$imgtype/$key.png', IMAGE))
+		{
+			if(theme != 'vanilla')
+				return themeimage(key, imgtype, 'vanilla');
+			else
+			{
+				trace(key + ', ' + imgtype + ', ' + theme);
+				trace('vanilla theme error!');
+				return '';
+			}
+		}
+
+		return 'themes:assets/themes/$theme/$imgtype/$key.png';
+	}
+
+	inline static public function themeanim(key:String, imgtype:String, theme:String = "")
+	{
+		var paths:Array<String> = OpenFlAssets.list(IMAGE);
+
+		var i:Int = 0;
+		while(i != paths.length)
+		{
+			if(paths[i].indexOf(key) != -1 && paths[i].indexOf(imgtype) != -1)
+			{
+				paths[i] = 'themes:' + paths[i];
+				++i;
+			}
+			else 
+			{
+				paths.remove(paths[i]);
+			}
+		}
+
+		if(paths.length == 0)
+			trace('themeanim error!');
+		
+		return paths;
+	}
+
+	inline static public function themecfg(theme:String = "")
+	{
+		if(theme == "")
+			theme = FlxG.save.data.NOTE_THEME;
+		var path:String = 'themes:assets/themes/$theme/theme.cfg';
+
+		return CoolUtil.coolTextFile(path);
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String)

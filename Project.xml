@@ -57,6 +57,7 @@
 		<library name="week4"    preload="true" />
 		<library name="week5"    preload="true" />
 		<library name="week6"    preload="true" />
+		<library name="themes"   preload="true" />
 	</section>
 	
 	<section if="NO_PRELOAD_ALL">
@@ -69,6 +70,7 @@
 		<library name="week4"    preload="false" />
 		<library name="week5"    preload="false" />
 		<library name="week6"    preload="false" />
+		<library name="themes"   preload="false" />
 	</section>
 	
 	<assets path="assets/songs"    library="songs"    exclude="*.ogg" if="web"/>
@@ -89,6 +91,7 @@
 	<assets path="assets/week5"    library="week5"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
+	<assets path="assets/themes"   library="themes"/>
 	
 	<assets path='art/readme.txt' rename='FUNKIN-readme.txt'/>
 	<assets path='README.md' rename='README.txt'/>

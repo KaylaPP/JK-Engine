@@ -39,18 +39,83 @@ class JKSprite extends FlxSpriteGroup
 {
     private var animations:Map<String, JKFrames>;
 
+    private var fallback:String = "";
+
     private var elapsed:Float = 0.0;
-    private var timer:Timer;
     private var currentAnimation:String;
     private var animIndex:Int = 0;
+    private var looping:Bool = false;
+    private var stoppingOnEnd:Bool = false;
+
+    private var timer:Timer;
 
     public var animationPlaying:Bool = false;
 
     public function new(x:Float = 0, y:Float = 0)
     {
         super(x, y);
-
+        currentAnimation = "";
+        timer = new Timer(0);
         animations = new Map<String, JKFrames>();
+    }
+
+    override function update(elapsed:Float)
+    {
+        #if debug
+        var wtf:Bool = true;
+        for(anim in animations)
+        {
+            for(spr in anim.SPRITES)
+            {
+                if(spr.alpha > 0)
+                    wtf = false;
+            }
+        }
+        if(wtf)
+        {
+            trace('ALL SPRITES ARE INVISIBLE DESPTIE CURANIM ' + currentAnimation);
+            trace(animIndex);
+        }
+        #end
+
+        var curAnim = animations.get(currentAnimation);
+
+        if(curAnim.SPRITES.length > 0)
+        {
+            for(spr in curAnim.SPRITES)
+            {
+                spr.alpha = 0;
+            }
+
+            if(animIndex >= curAnim.SPRITES.length)
+            {
+                if(looping)
+                {
+                    animIndex = 0;
+                }
+                else if(stoppingOnEnd)
+                {
+                    animIndex = 0;
+                    currentAnimation = "";
+                    animationPlaying = false;
+                    timer.stop();
+                    play(fallback);
+                    trace('playing fallback');
+                }
+                else 
+                {
+                    animIndex = curAnim.SPRITES.length - 1;
+                }
+            }
+            curAnim.SPRITES[animIndex].alpha = 1;
+
+            while(elapsed >= curAnim.FRAMERATETIME.frameTime)
+            {
+                animIndex++;
+                elapsed -= curAnim.FRAMERATETIME.frameTime;
+            }
+        }
+
     }
 
     public function getCurAnim()
@@ -105,74 +170,43 @@ class JKSprite extends FlxSpriteGroup
         return this;
     }
 
-    public function play(name:String, loop:Bool = false)
+    public function play(name:String, loop:Bool = false, stopOnEnd:Bool = false)
     {
+        if(loop)
+            stopOnEnd = true;
+
         if(animations.exists(name))
         {
-            timer = new Timer(0);
-            animIndex = 0;
+            elapsed = 0.0;
+
+            timer.run = function(){ elapsed += 8.0 / 1000.0; };
+
             currentAnimation = name;
+            this.looping = loop;
+            this.stoppingOnEnd = stopOnEnd;
+
+            for(anim in animations)
+            {
+                for(spr in anim.SPRITES)
+                {
+                    spr.alpha = 0;
+                }
+            }
+
+            animIndex = 0;
             animationPlaying = true;
-            if(loop)
-            {
-                // repeat over and over
-                timer.run = function()
-                {
-                    var curAnim = animations.get(currentAnimation);
-                    if(curAnim.SPRITES.length > 0)
-                    {
-                        for(spr in curAnim.SPRITES)
-                        {
-                            spr.alpha = 0;
-                        }
 
-                        if(animIndex >= curAnim.SPRITES.length)
-                        {
-                            animIndex = 0;
-                        }
-                        curAnim.SPRITES[animIndex].alpha = 1;
-
-                        if(elapsed >= curAnim.FRAMERATETIME.frameTime)
-                        {
-                            animIndex++;
-                            elapsed -= curAnim.FRAMERATETIME.frameTime;
-                        }
-
-                        elapsed += 8.0 / 1000.0;
-                    }
-                };
-            }
-            else 
-            {
-                // dont repeat
-                timer.run = function()
-                {
-                    var curAnim = animations.get(currentAnimation);
-                    if(curAnim.SPRITES.length > 0)
-                    {
-                        for(spr in curAnim.SPRITES)
-                        {
-                            spr.alpha = 0;
-                        }
-
-                        if(animIndex >= curAnim.SPRITES.length)
-                        {
-                            animIndex = curAnim.SPRITES.length - 1;
-                        }
-                        curAnim.SPRITES[animIndex].alpha = 1;
-
-                        if(elapsed >= curAnim.FRAMERATETIME.frameTime)
-                        {
-                            animIndex++;
-                            elapsed -= curAnim.FRAMERATETIME.frameTime;
-                        }
-
-                        elapsed += 8.0 / 1000.0;
-                    }
-                };
-            }
+            animations.get(currentAnimation).SPRITES[animIndex].alpha = 1;
         }
         return this;
+    }
+
+    public function setFallBackAnim(anim:String)
+    {
+        if(animations.exists(anim))
+        {
+            fallback = anim;
+        }
     }
 
     override function setGraphicSize(Width:Int = 0, Height:Int = 0)
@@ -182,6 +216,61 @@ class JKSprite extends FlxSpriteGroup
             for(spr in anim.SPRITES)
             {
                 spr.setGraphicSize(Width, Height);
+            }
+        }
+    }
+
+    override function updateHitbox()
+    {
+        for(anim in animations)
+        {
+            for(spr in anim.SPRITES)
+            {
+                spr.updateHitbox();
+            }
+        }
+    }
+
+    // X and Y are floats on the inclusive range [-1.0, 1.0] where (-1.0, -1.0) is top left, (0.0, 0.0) is center, and (1.0, 1.0) is bottom right
+    public function setOrigin(X:Float, Y:Float)
+    {
+        // FIX THIS FUNCTION
+        var rootSpr:FlxSprite = null;
+        var rootMidX:Float = 0;
+        var rootMidY:Float = 0;
+        for(anim in animations)
+        {
+            if(rootSpr == null)
+            {
+                rootSpr = anim.SPRITES[0];
+                rootMidX = rootSpr.width / 2;
+                rootMidY = rootSpr.height / 2;
+            }
+            for(spr in anim.SPRITES)
+            {
+                if(spr != rootSpr)
+                {
+                    var midX = spr.width / 2;
+                    var midY = spr.width / 2;
+
+                    spr.x = rootSpr.x + (rootMidX - midX) * (X + 1);
+                    spr.y = rootSpr.y + (rootMidY - midY) * (Y + 1);
+                }
+            }
+        }
+    }
+
+    // If you keep one value at zero, the whole thing will scale by the other factor
+    // Essentially, scaleBy(0.7) is the same as scaleBy(0.7, 0.7)
+    public function scaleBy(XScale:Float = 0, YScale:Float = 0)
+    {
+        XScale = XScale > YScale ? XScale : YScale;
+        YScale = XScale > YScale ? XScale : YScale;
+        for(anim in animations)
+        {
+            for(spr in anim.SPRITES)
+            {
+                spr.setGraphicSize(Math.ceil(spr.width * XScale), Math.ceil(spr.height * YScale));
                 spr.updateHitbox();
             }
         }

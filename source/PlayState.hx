@@ -1292,28 +1292,29 @@ class PlayState extends MusicBeatState
 			{
 				case 0:
 					babyArrow.addAnim('static', Paths.themeimage('idle_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
-					babyArrow.addAnims('pressed', Paths.themeanim('hit_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.addAnims('confirm', Paths.themeanim('miss_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.x += Note.swagWidth * 0;
 				case 1:
 					babyArrow.addAnim('static', Paths.themeimage('idle_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
-					babyArrow.addAnims('pressed', Paths.themeanim('hit_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.addAnims('confirm', Paths.themeanim('miss_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.x += Note.swagWidth * 1;
 				case 2:
 					babyArrow.addAnim('static', Paths.themeimage('idle_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
-					babyArrow.addAnims('pressed', Paths.themeanim('hit_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.addAnims('confirm', Paths.themeanim('miss_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.x += Note.swagWidth * 2;
 				case 3:
 					babyArrow.addAnim('static', Paths.themeimage('idle_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
-					babyArrow.addAnims('pressed', Paths.themeanim('hit_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.addAnims('confirm', Paths.themeanim('miss_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.x += Note.swagWidth * 3;
 			}
 
 			babyArrow.antialiasing = true;
-			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+			babyArrow.setOrigin(0, 0);
+			babyArrow.scaleBy(0.7);
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
@@ -1331,7 +1332,7 @@ class PlayState extends MusicBeatState
 				playerStrums.add(babyArrow);
 			}
 
-			babyArrow.play('static');
+			babyArrow.play('static', true);
 			
 			if(FlxG.save.data.centerArrows)
 				babyArrow.x -= 223;
@@ -2229,7 +2230,8 @@ class PlayState extends MusicBeatState
 	
 			if (!curStage.startsWith('school'))
 			{
-				rating.setGraphicSize(Std.int(rating.width * 0.7));
+				//rating.setGraphicSize(Std.int(rating.width * 0.7));
+				rating.scaleBy(0.7);
 				rating.antialiasing = true;
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
 				comboSpr.antialiasing = true;
@@ -2682,11 +2684,6 @@ class PlayState extends MusicBeatState
 		var down = controls.DOWN;
 		var left = controls.LEFT;
 
-/*		trace(up);
-		trace(right);
-		trace(down);
-		trace(left);*/
-
 		var upP = controls.UP_P;
 		var rightP = controls.RIGHT_P;
 		var downP = controls.DOWN_P;
@@ -2899,49 +2896,40 @@ class PlayState extends MusicBeatState
 				case 2:
 					if (upP && spr.getCurAnim() != 'confirm')
 					{
-						spr.play('pressed');
+						spr.play('pressed', false);
 						trace('play');
 					}
-					if (upR || holdArray[2].absolutelyFalse())
+					if (!up || holdArray[2].absolutelyFalse())
 					{
-						spr.play('static');
+						spr.play('static', false);
 						repReleases++;
 					}
 				
 				case 3:
 					if (rightP && spr.getCurAnim() != 'confirm')
-						spr.play('pressed');
-					if (rightR || holdArray[3].absolutelyFalse())
+						spr.play('pressed', false);
+					if (!right || holdArray[3].absolutelyFalse())
 					{
-						spr.play('static');
+						spr.play('static', false);
 						repReleases++;
 					}
 				case 1:
 					if (downP && spr.getCurAnim() != 'confirm')
-						spr.play('pressed');
-					if (downR || holdArray[1].absolutelyFalse())
+						spr.play('pressed', false);
+					if (!down || holdArray[1].absolutelyFalse())
 					{
-						spr.play('static');
+						spr.play('static', false);
 						repReleases++;
 					}
 				case 0:
 					if (leftP && spr.getCurAnim() != 'confirm')
-						spr.play('pressed');
-					if (leftR || holdArray[0].absolutelyFalse())
+						spr.play('pressed', false);
+					if (!left || holdArray[0].absolutelyFalse())
 					{
-						spr.play('static');
+						spr.play('static', false);
 						repReleases++;
 					}
 			}
-			
-			if (spr.getCurAnim() == 'confirm' && !curStage.startsWith('school'))
-			{
-				spr.centerOffsets();
-				spr.offset.x -= 13;
-				spr.offset.y -= 13;
-			}
-			else
-				spr.centerOffsets();
 		});
 	}
 
@@ -3054,7 +3042,7 @@ class PlayState extends MusicBeatState
 			{
 				if (Math.abs(note.noteData) == spr.ID)
 				{
-					spr.play('confirm', true);
+					spr.play('confirm', false);
 				}
 			});
 

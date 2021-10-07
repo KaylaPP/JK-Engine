@@ -32,11 +32,13 @@ class DebugState extends MusicBeatState
 
         FlxG.cameras.reset(figgleCamera);
 
-
         figgleBottom = new JKSprite().addAnims('default', Paths.themeanim("hit_tap_down", "receptors"), new FrameRateTime().setFPS(1)).play('default', true);
+        figgleBottom.setOrigin(0, 0);
+        figgleBottom.x = FlxG.width / 2;
+        figgleBottom.y = FlxG.height / 2;
         figgleBottom.alpha = 1;
-        figgleBottom.setGraphicSize(20, 20);
-        figgleBottom.updateHitbox();
+        //figgleBottom.setGraphicSize(20, 20);
+        //figgleBottom.updateHitbox();
 
         add(figgleBottom);
 

@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxState;
 
-class DebugState extends MusicBeatState
+class DebugState extends FlxState
 {
     private var figgleBottom:JKSprite;
     private var figgleCamera:FlxCamera;
@@ -26,19 +26,25 @@ class DebugState extends MusicBeatState
         FlxG.save.data.NOTE_THEME = "vanilla";
         figgleCamera = new FlxCamera();
         noteSillyShader = new NoteSillyShader();
-        figgleCamera.setFilters([ new ShaderFilter(noteSillyShader) ]);
+        //figgleCamera.setFilters([ new ShaderFilter(noteSillyShader) ]);
 
         add(figgleCamera);
 
         FlxG.cameras.reset(figgleCamera);
 
-        figgleBottom = new JKSprite().addAnims('default', Paths.themeanim("hit_tap_down", "receptors"), new FrameRateTime().setFPS(1)).play('default', true);
+        figgleBottom = new JKSprite();
+        figgleBottom.addAnim('static', Paths.themeimage('idle_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
+        figgleBottom.addAnims('pressed', Paths.themeanim('miss_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+        figgleBottom.addAnims('confirm', Paths.themeanim('hit_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
+        figgleBottom.play('static');
         figgleBottom.setOrigin(0, 0);
-        figgleBottom.x = FlxG.width / 2;
-        figgleBottom.y = FlxG.height / 2;
         figgleBottom.alpha = 1;
         //figgleBottom.setGraphicSize(20, 20);
-        //figgleBottom.updateHitbox();
+        figgleBottom.updateHitbox();
+        figgleBottom.setRootSprite('static', 0);
+        figgleBottom.x = FlxG.width / 2;
+        figgleBottom.y = FlxG.height / 2;
+        figgleBottom.scaleBy(2);
 
         add(figgleBottom);
 
@@ -67,6 +73,19 @@ class DebugState extends MusicBeatState
                 }
                 playedRegularSound = true;
             }
+        }
+
+        if(FlxG.keys.justPressed.D)
+        {
+            figgleBottom.play('pressed', false);
+        }
+        else if(FlxG.keys.justPressed.F)
+        {
+            figgleBottom.play('confirm', false);
+        }
+        else if(FlxG.keys.justReleased.ANY)
+        {
+            figgleBottom.play('static', false);
         }
 
         if(FlxG.keys.justPressed.E)

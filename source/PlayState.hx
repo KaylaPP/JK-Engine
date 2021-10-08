@@ -1286,7 +1286,7 @@ class PlayState extends MusicBeatState
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
-			var babyArrow:JKSprite = new JKSprite(0, strumLine.y);
+			var babyArrow:JKSprite = new JKSprite();
 
 			switch (Math.abs(i))
 			{
@@ -1294,29 +1294,30 @@ class PlayState extends MusicBeatState
 					babyArrow.addAnim('static', Paths.themeimage('idle_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
 					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.x += Note.swagWidth * 0;
 				case 1:
 					babyArrow.addAnim('static', Paths.themeimage('idle_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
 					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_down', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.x += Note.swagWidth * 1;
 				case 2:
 					babyArrow.addAnim('static', Paths.themeimage('idle_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
 					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_up', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.x += Note.swagWidth * 2;
 				case 3:
 					babyArrow.addAnim('static', Paths.themeimage('idle_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
 					babyArrow.addAnims('pressed', Paths.themeanim('miss_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
 					babyArrow.addAnims('confirm', Paths.themeanim('hit_tap_right', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
-					babyArrow.x += Note.swagWidth * 3;
 			}
 
 			babyArrow.antialiasing = true;
+			babyArrow.updateHitbox();
 			babyArrow.setOrigin(0, 0);
+			babyArrow.updateHitbox();
+			babyArrow.setRootSprite('static', 0);
 			babyArrow.scaleBy(0.7);
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
+			babyArrow.x += Note.swagWidth * i;
+			babyArrow.y = strumLine.y;
 
 			if (!isStoryMode)
 			{

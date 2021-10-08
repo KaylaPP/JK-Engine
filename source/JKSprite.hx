@@ -71,7 +71,7 @@ class JKSprite extends FlxSpriteGroup
                     wtf = false;
             }
         }
-        if(wtf)
+        if(wtf && currentAnimation != '')
         {
             trace('ALL SPRITES ARE INVISIBLE DESPTIE CURANIM ' + currentAnimation);
             trace(animIndex);
@@ -80,7 +80,7 @@ class JKSprite extends FlxSpriteGroup
 
         var curAnim = animations.get(currentAnimation);
 
-        if(curAnim.SPRITES.length > 0)
+        if(curAnim != null && curAnim.SPRITES != null && curAnim.SPRITES.length > 0)
         {
             for(spr in curAnim.SPRITES)
             {
@@ -229,33 +229,53 @@ class JKSprite extends FlxSpriteGroup
                 spr.updateHitbox();
             }
         }
+
+        super.updateHitbox();
     }
 
     // X and Y are floats on the inclusive range [-1.0, 1.0] where (-1.0, -1.0) is top left, (0.0, 0.0) is center, and (1.0, 1.0) is bottom right
     public function setOrigin(X:Float, Y:Float)
     {
-        // FIX THIS FUNCTION
+        var rootCenterX:Float = 0;
+        var rootCenterY:Float = 0;
         var rootSpr:FlxSprite = null;
-        var rootMidX:Float = 0;
-        var rootMidY:Float = 0;
+
         for(anim in animations)
         {
             if(rootSpr == null)
             {
                 rootSpr = anim.SPRITES[0];
-                rootMidX = rootSpr.width / 2;
-                rootMidY = rootSpr.height / 2;
             }
             for(spr in anim.SPRITES)
             {
-                if(spr != rootSpr)
-                {
-                    var midX = spr.width / 2;
-                    var midY = spr.width / 2;
+                var sprCenterX:Float = spr.width / 2.0 + X * spr.width / 2.0;
+                var sprCenterY:Float = spr.height / 2.0 + Y * spr.height / 2.0;
 
-                    spr.x = rootSpr.x + (rootMidX - midX) * (X + 1);
-                    spr.y = rootSpr.y + (rootMidY - midY) * (Y + 1);
-                }
+                var CenterDeltaX:Float = rootCenterX - sprCenterX;
+                var CenterDeltaY:Float = rootCenterY - sprCenterY;
+
+                spr.x += CenterDeltaX;
+                spr.y += CenterDeltaY;
+            }
+        }
+    }
+
+    // Sets the origin of each sprite to the origin of the given sprite
+    public function setRootSprite(animation:String, frame:Int)
+    {
+        if(frame >= animations.get(animation).SPRITES.length)
+            frame = animations.get(animation).SPRITES.length - 1;
+        var rootSpr:FlxSprite = animations.get(animation).SPRITES[frame];
+
+        for(anim in animations)
+        {
+            for(spr in anim.SPRITES)
+            {
+                var dX:Float = x - rootSpr.x;
+                var dY:Float = y - rootSpr.y;
+
+                spr.x -= dX;
+                spr.y -= dY;
             }
         }
     }
@@ -264,14 +284,23 @@ class JKSprite extends FlxSpriteGroup
     // Essentially, scaleBy(0.7) is the same as scaleBy(0.7, 0.7)
     public function scaleBy(XScale:Float = 0, YScale:Float = 0)
     {
-        XScale = XScale > YScale ? XScale : YScale;
-        YScale = XScale > YScale ? XScale : YScale;
+        XScale = YScale == 0 ? XScale : YScale;
+        YScale = XScale == 0 ? YScale : XScale;
         for(anim in animations)
         {
             for(spr in anim.SPRITES)
             {
+                var oldCenterX:Float = spr.width / 2.0;
+                var oldCenterY:Float = spr.height / 2.0;
+
                 spr.setGraphicSize(Math.ceil(spr.width * XScale), Math.ceil(spr.height * YScale));
                 spr.updateHitbox();
+
+                var newCenterX:Float = spr.width / 2.0;
+                var newCenterY:Float = spr.height / 2.0;
+
+                spr.x += oldCenterX - newCenterX;
+                spr.y += oldCenterY - newCenterY;
             }
         }
     }

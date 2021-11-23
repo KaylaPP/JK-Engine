@@ -43,6 +43,7 @@ class JKSprite extends FlxSpriteGroup
 
     private var elapsed:Float = 0.0;
     private var currentAnimation:String;
+    private var nextAnimation:String;
     private var animIndex:Int = 0;
     private var looping:Bool = false;
     private var stoppingOnEnd:Bool = false;
@@ -55,6 +56,7 @@ class JKSprite extends FlxSpriteGroup
     {
         super(x, y);
         currentAnimation = "";
+        nextAnimation = "";
         timer = new Timer(0);
         animations = new Map<String, JKFrames>();
     }
@@ -99,12 +101,16 @@ class JKSprite extends FlxSpriteGroup
                     currentAnimation = "";
                     animationPlaying = false;
                     timer.stop();
-                    play(fallback);
-                    trace('playing fallback');
+                    play("", true);
+                    trace('playing nothing');
                 }
                 else 
                 {
                     animIndex = curAnim.SPRITES.length - 1;
+                    if(nextAnimation == "")
+                        play(fallback, true);
+                    else 
+                        play(nextAnimation, true, looping, stoppingOnEnd);
                 }
             }
             curAnim.SPRITES[animIndex].alpha = 1;
@@ -170,10 +176,21 @@ class JKSprite extends FlxSpriteGroup
         return this;
     }
 
-    public function play(name:String, loop:Bool = false, stopOnEnd:Bool = false)
+    public function play(name:String, force = false, loop:Bool = false, stopOnEnd:Bool = false)
     {
+        if(!force)
+        {
+            nextAnimation = name;
+            looping = loop;
+            stoppingOnEnd = stopOnEnd;
+            return this;
+        }
+
         if(loop)
+        {
+            nextAnimation = name;
             stopOnEnd = true;
+        }
 
         if(animations.exists(name))
         {

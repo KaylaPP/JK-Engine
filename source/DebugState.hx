@@ -32,6 +32,8 @@ class DebugState extends FlxState
 
         FlxG.cameras.reset(figgleCamera);
 
+        add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height));
+
         figgleBottom = new JKSprite();
         figgleBottom.addAnim('static', Paths.themeimage('idle_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(1));
         figgleBottom.addAnims('pressed', Paths.themeanim('miss_tap_left', 'receptors', FlxG.save.data.NOTE_THEME), new FrameRateTime().setFPS(24));
@@ -45,6 +47,7 @@ class DebugState extends FlxState
         figgleBottom.x = FlxG.width / 2;
         figgleBottom.y = FlxG.height / 2;
         figgleBottom.scaleBy(2);
+        figgleBottom.antialiasing = true;
 
         add(figgleBottom);
 
@@ -54,6 +57,8 @@ class DebugState extends FlxState
     override function update(elapsed:Float)
     {
         super.update(elapsed);
+
+        figgleBottom.alpha = FlxG.mouse.getPosition().y / FlxG.height;
 
         totalElapsed += elapsed;
 
@@ -77,15 +82,15 @@ class DebugState extends FlxState
 
         if(FlxG.keys.justPressed.D)
         {
-            figgleBottom.play('pressed', false);
+            figgleBottom.play('pressed');
         }
         else if(FlxG.keys.justPressed.F)
         {
-            figgleBottom.play('confirm', false);
+            figgleBottom.play('confirm');
         }
         else if(FlxG.keys.justReleased.ANY)
         {
-            figgleBottom.play('static', false);
+            figgleBottom.play('static');
         }
 
         if(FlxG.keys.justPressed.E)

@@ -117,6 +117,15 @@ class Note extends FlxSprite
 			return;
 		}
 
+		if(noteType == '0' || noteType == '3')
+		{
+			if(sustainEnd.insideRoot || sustainPiece.insideRoot)
+			{
+				sustainEnd.insideRoot = true;
+				sustainPiece.insideRoot = true;
+			}
+		}
+
 		if (mustPress)
 		{
 			var noteDiff:Float = Math.abs(strumTime - Conductor.songPosition);
@@ -148,6 +157,12 @@ class Note extends FlxSprite
 					Std.int(0xE5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool()));
 			}
 
+			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 1.0) && !wasGoodHit && noteType != '0')
+			{
+				tooLate = true;
+				rating = "shit";
+			}
+
 			if(canBeHit)
 			{
 				switch(noteType)
@@ -170,12 +185,6 @@ class Note extends FlxSprite
 				case 'M':
 					rating = "boom";
 				}
-			}
-
-			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 1.0) && !wasGoodHit && noteType != '0')
-			{
-				tooLate = true;
-				rating = "shit";
 			}
 		}
 		else
@@ -200,10 +209,6 @@ class Note extends FlxSprite
 		if(insideRoot && noteType == '0')
 		{
 			alpha = 0;
-		}
-		else 
-		{
-			alpha = 1;
 		}
 	}
 
